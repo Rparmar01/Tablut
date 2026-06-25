@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tablut</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="screen menu-screen" id="menuScreen" aria-labelledby="menuTitle">
+        <div class="menu-panel">
+          <p class="overline">Empire board game</p>
+          <h1 id="menuTitle">Tablut</h1>
+          <div class="menu-actions">
+            <button class="primary-button" id="singlePlayerButton" type="button">Single Player</button>
+            <button class="secondary-button" id="localMultiplayerButton" type="button">Local Multiplayer</button>
+            <button class="secondary-button" id="settingsButton" type="button">Settings</button>
+            <button class="quiet-button" id="quitButton" type="button">Quit</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen settings-screen is-hidden" id="settingsScreen" aria-labelledby="settingsTitle">
+        <div class="menu-panel settings-page">
+          <p class="overline">Player settings</p>
+          <h1 id="settingsTitle">Settings</h1>
+          <div class="settings-panel" aria-label="Game settings">
+            <div class="setting-row">
+              <label for="eloSlider">AI ELO</label>
+              <output id="eloValue" for="eloSlider">1500</output>
+            </div>
+            <input id="eloSlider" type="range" min="0" max="3000" step="50" value="1500">
+            <div class="range-captions">
+              <span>0</span>
+              <span>3000</span>
+            </div>
+            <div class="setting-row">
+              <label for="aiDelaySlider">AI Move Delay</label>
+              <output id="aiDelayValue" for="aiDelaySlider">220 ms</output>
+            </div>
+            <input id="aiDelaySlider" type="range" min="0" max="1200" step="50" value="220">
+            <label class="check-row">
+              <input id="showLegalMovesToggle" type="checkbox" checked>
+              <span>Show legal move hints</span>
+            </label>
+            <label class="check-row">
+              <input id="lastMoveToggle" type="checkbox" checked>
+              <span>Highlight last move</span>
+            </label>
+          </div>
+          <div class="menu-actions">
+            <button class="primary-button" id="saveSettingsButton" type="button">Save Settings</button>
+            <button class="secondary-button" id="resetSettingsButton" type="button">Reset Defaults</button>
+            <button class="quiet-button" id="settingsBackButton" type="button">Back</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen game-screen is-hidden" id="gameScreen" aria-label="Tablut game">
+        <header class="game-header">
+          <div>
+            <p class="overline" id="modeLabel">Local Multiplayer</p>
+            <h2>Tablut</h2>
+          </div>
+          <div class="header-actions">
+            <button class="secondary-button small" id="newGameButton" type="button">New Game</button>
+            <button class="quiet-button small" id="menuButton" type="button">Menu</button>
+          </div>
+        </header>
+
+        <div class="game-layout">
+          <section class="board-stage" aria-label="Game board">
+            <div class="board-wrap">
+              <img class="board-art" src="Assets/Tablut_Empty_Board.png" alt="">
+              <div class="board-grid" id="boardGrid" role="grid" aria-label="9 by 9 Tablut board"></div>
+            </div>
+          </section>
+
+          <aside class="side-panel" aria-label="Game status">
+            <div class="turn-card">
+              <span class="turn-chip" id="turnChip">Attackers</span>
+              <h3 id="statusTitle">Attackers to move</h3>
+              <p id="statusText">Select a dark piece to see its legal moves.</p>
+            </div>
+            <div class="rules-card">
+              <h3>Rules In Play</h3>
+              <ul>
+                <li>Rook-style movement on open ranks and files.</li>
+                <li>Only the king may use the center throne square.</li>
+                <li>Soldiers are captured by sandwiching them against a piece or the throne.</li>
+                <li>The king wins on any edge tile and loses when surrounded.</li>
+              </ul>
+            </div>
+            <div class="captures-card">
+              <h3>Captured</h3>
+              <div class="capture-counts">
+                <span><strong id="capturedAttackers">0</strong> attackers</span>
+                <span><strong id="capturedDefenders">0</strong> defenders</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="modal-backdrop is-hidden" id="singlePlayerModal" role="dialog" aria-modal="true" aria-labelledby="singlePlayerTitle">
+        <div class="modal-panel">
+          <p class="overline">Single player</p>
+          <h2 id="singlePlayerTitle">Choose Your Side</h2>
+          <div class="choice-panel">
+            <div class="setting-row side-row">
+              <span>Play as</span>
+              <div class="segmented" role="group" aria-label="Single player side">
+                <button class="segment is-active" type="button" data-single-side="defender">Defender</button>
+                <button class="segment" type="button" data-single-side="attacker">Attacker</button>
+              </div>
+            </div>
+            <p class="choice-note">Attackers move first. The AI plays the opposite side using the ELO set in Settings.</p>
+          </div>
+          <div class="modal-actions">
+            <button class="primary-button" id="confirmSinglePlayerButton" type="button">Confirm</button>
+            <button class="quiet-button" id="cancelSinglePlayerButton" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-backdrop is-hidden" id="localMultiplayerModal" role="dialog" aria-modal="true" aria-labelledby="localMultiplayerTitle">
+        <div class="modal-panel">
+          <p class="overline">Local multiplayer</p>
+          <h2 id="localMultiplayerTitle">Choose Player Roles</h2>
+          <div class="choice-panel">
+            <div class="setting-row side-row">
+              <span>Player 1</span>
+              <div class="segmented" role="group" aria-label="Player 1 side">
+                <button class="segment is-active" type="button" data-player-one-side="attacker">Attacker</button>
+                <button class="segment" type="button" data-player-one-side="defender">Defender</button>
+              </div>
+            </div>
+            <div class="setting-row side-row">
+              <span>Player 2</span>
+              <div class="segmented" role="group" aria-label="Player 2 side">
+                <button class="segment" type="button" data-player-two-side="attacker">Attacker</button>
+                <button class="segment is-active" type="button" data-player-two-side="defender">Defender</button>
+              </div>
+            </div>
+            <p class="choice-note">Both players use the same board and pass the turn after each legal move.</p>
+          </div>
+          <div class="modal-actions">
+            <button class="primary-button" id="confirmLocalMultiplayerButton" type="button">Confirm</button>
+            <button class="quiet-button" id="cancelLocalMultiplayerButton" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="tablut-core.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
