@@ -1,6 +1,6 @@
 # Tablut
 
-A local browser version of Tablut based on Mount & Blade II: Bannerlord's Empire board game.
+A local browser version of Mount & Blade II: Bannerlord's Empire board game Tablut.
 
 Includes:
 
